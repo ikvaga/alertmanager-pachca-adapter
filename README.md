@@ -85,6 +85,15 @@ receivers:
 - `ROUTES_PATH` (необязательно): путь до `routes.yaml` (по умолчанию `/config/routes.yaml`)
 - `PORT` (необязательно): по умолчанию `8080`
 - `MESSAGE_MAX_ALERTS` (необязательно): сколько алертов максимум включать в один пост (по умолчанию `20`)
+- `WEBHOOK_TOKEN` (необязательно): если задан, то `/alertmanager/webhook` требует заголовок `X-Webhook-Token: <token>`
+- `PACHCA_TIMEOUT_SECONDS` (необязательно): таймаут запросов к Pachca (по умолчанию `15`)
+- `PACHCA_MAX_ATTEMPTS` (необязательно): количество попыток отправки в Pachca при сетевых ошибках/429/5xx (по умолчанию `3`)
+
+## Метрики
+
+Доступны Prometheus-метрики:
+
+- `GET /metrics`
 
 ## Как получить `entity_id` чата в Пачке
 
