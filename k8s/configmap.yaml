@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-pachka-router-routes
+data:
+  routes.yaml: |
+    version: 1
+    default:
+      discussion_id: 1000
+    routes:
+      - name: payments
+        match:
+          team: payments
+        target:
+          discussion_id: 2001
+

@@ -1,0 +1,38 @@
+version: 1
+
+# Правила обрабатываются сверху вниз. Все совпавшие правила получат копию уведомления.
+# Если не совпало ни одно правило — используется default (если задан).
+
+default:
+  discussion_id: 1000 # чат "SRE / общий"
+
+routes:
+  # Платежи: все алерты с team=payments
+  - name: payments
+    match:
+      team: payments
+    target:
+      discussion_id: 2001
+
+  # Core backend: по namespace
+  - name: core-backend
+    match:
+      namespace: core
+    target:
+      discussion_id: 2002
+
+  # Базы данных: по service и severity
+  - name: db-critical
+    match:
+      service: postgres
+      severity: critical
+    target:
+      discussion_id: 2003
+
+  # Fallback по явному owner (удобно для ручного назначения ответственности)
+  - name: owner-platform
+    match:
+      owner: platform
+    target:
+      discussion_id: 2004
+

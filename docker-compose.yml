@@ -1,0 +1,14 @@
+services:
+  alertmanager-pachka-router:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PACHCA_TOKEN=${PACHCA_TOKEN}
+      - PACHCA_BASE_URL=${PACHCA_BASE_URL:-https://api.pachca.com/api/shared/v1}
+      - ROUTES_PATH=/config/routes.yaml
+      - MESSAGE_MAX_ALERTS=${MESSAGE_MAX_ALERTS:-20}
+    volumes:
+      - ./routes.yaml:/config/routes.yaml:ro
+    restart: unless-stopped
+

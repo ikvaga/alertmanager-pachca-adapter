@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alertmanager-pachka-router
+  labels:
+    app: alertmanager-pachka-router
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alertmanager-pachka-router
+  template:
+    metadata:
+      labels:
+        app: alertmanager-pachka-router
+    spec:
+      containers:
+        - name: alertmanager-pachka-router
+          # Вариант 1: соберите/запушьте образ и укажите его здесь
+          image: alertmanager-pachka-router:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: alertmanager-pachka-router
+          env:
+            - name: PACHCA_BASE_URL
+              value: "https://api.pachca.com/api/shared/v1"
+            - name: ROUTES_PATH
+              value: "/config/routes.yaml"
+            - name: MESSAGE_MAX_ALERTS
+              value: "20"
+          volumeMounts:
+            - name: routes
+              mountPath: /config/routes.yaml
+              subPath: routes.yaml
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 2
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+      volumes:
+        - name: routes
+          configMap:
+            name: alertmanager-pachka-router-routes
+
