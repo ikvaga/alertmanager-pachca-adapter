@@ -23,3 +23,14 @@ pachca_send_seconds = Histogram(
     "Time spent sending messages to Pachca",
 )
 
+webhook_duration_seconds = Histogram(
+    "am_pachca_router_webhook_duration_seconds",
+    "Wall time for handling POST /alertmanager/webhook (including Pachca HTTP)",
+)
+
+webhook_outcomes_total = Counter(
+    "am_pachca_router_webhook_outcomes_total",
+    "Webhook handling outcome",
+    ["outcome"],
+)
+

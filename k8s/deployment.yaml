@@ -32,6 +32,10 @@ spec:
               value: "/config/routes.yaml"
             - name: MESSAGE_MAX_ALERTS
               value: "20"
+            - name: LOG_LEVEL
+              value: "INFO"
+            - name: LOG_FORMAT
+              value: "json"
           volumeMounts:
             - name: routes
               mountPath: /config/routes.yaml
