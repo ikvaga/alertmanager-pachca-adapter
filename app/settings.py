@@ -1,6 +1,4 @@
-from typing import Optional
-
-from pydantic import BaseSettings, Field, validator
+from pydantic import BaseSettings, Field
 
 
 class Settings(BaseSettings):
@@ -19,20 +17,6 @@ class Settings(BaseSettings):
 
     pachca_timeout_seconds: float = Field(15.0, env="PACHCA_TIMEOUT_SECONDS")
     pachca_max_attempts: int = Field(3, env="PACHCA_MAX_ATTEMPTS")
-
-    log_level: str = Field("INFO", env="LOG_LEVEL")
-    log_format: str = Field("text", env="LOG_FORMAT")
-    log_file_path: Optional[str] = Field(None, env="LOG_FILE_PATH")
-    log_file_max_megabytes: int = Field(10, env="LOG_FILE_MAX_MB")
-    log_file_backup_count: int = Field(5, env="LOG_FILE_BACKUP_COUNT")
-
-    @validator("log_format")
-    @classmethod
-    def normalize_log_format(cls, v: str) -> str:
-        x = (v or "text").lower()
-        if x not in ("text", "json"):
-            raise ValueError("LOG_FORMAT must be text or json")
-        return x
 
     class Config:
         env_file = ".env"

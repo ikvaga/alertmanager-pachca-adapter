@@ -88,21 +88,12 @@ receivers:
 - `WEBHOOK_TOKEN` (необязательно): если задан, то `/alertmanager/webhook` требует заголовок `X-Webhook-Token: <token>`
 - `PACHCA_TIMEOUT_SECONDS` (необязательно): таймаут запросов к Pachca (по умолчанию `15`)
 - `PACHCA_MAX_ATTEMPTS` (необязательно): количество попыток отправки в Pachca при сетевых ошибках/429/5xx (по умолчанию `3`)
-- `LOG_LEVEL` (необязательно): уровень логирования (по умолчанию `INFO`)
-- `LOG_FORMAT` (необязательно): `text` или `json` (в Kubernetes удобнее `json` для Loki/ELK; в deployment уже задан `json`)
-- `LOG_FILE_PATH` (необязательно): если задан — дублировать логи в файл с ротацией (на bare metal / VM; в Kubernetes обычно не нужен, логи идут в stdout и ротирует kubelet)
-- `LOG_FILE_MAX_MB` (необязательно): размер файла до ротации (по умолчанию `10`)
-- `LOG_FILE_BACKUP_COUNT` (необязательно): число старых файлов (по умолчанию `5`)
 
 ## Метрики
 
 Доступны Prometheus-метрики:
 
 - `GET /metrics`
-- `am_pachca_router_webhook_duration_seconds` — время обработки webhook (включая HTTP в Пачку)
-- `am_pachca_router_webhook_outcomes_total{outcome=...}` — итог обработки: `success`, `no_alerts`, `no_routes`, `auth_failed`, `pachca_error`
-
-Скрапинг в Kubernetes (Prometheus Operator): пример `k8s/servicemonitor.yaml` (применяйте отдельно, см. комментарий в файле).
 
 ## Как получить `entity_id` чата в Пачке
 
