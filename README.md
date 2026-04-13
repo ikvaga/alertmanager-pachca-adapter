@@ -36,6 +36,8 @@ docker compose up --build
 curl -sS http://localhost:8080/health
 ```
 
+В compose поднимается **только адаптер** (порт **8080**). Alertmanager в бою/на стенде ставится отдельно и шлёт webhook на `POST /alertmanager/webhook` (см. раздел ниже). Для быстрой проверки без AM можно отправить такой же JSON webhook’а напрямую на `http://localhost:8080/alertmanager/webhook`.
+
 ## Деплой в Kubernetes
 
 Манифесты лежат в `k8s/` (kustomize).
@@ -109,4 +111,31 @@ receivers:
 - заголовок с `status`, количеством алертов, общей важностью (если есть)
 - список алертов (кратко: `alertname`, `instance`, `severity`, `summary`)
 - ссылка `generatorURL` (если есть)
+
+## Публикация в GitLab (ветка `adapter-only`)
+
+Репозиторий уже на ветке **`adapter-only`**: в `docker-compose` только сервис адаптера, без локального Alertmanager.
+
+1. В GitLab: **New project → Create blank project** (или импорт), скопируйте URL репозитория, например `git@gitlab.example.com:group/alertmanager-pachka-router.git` или HTTPS.
+
+2. В каталоге проекта на машине:
+
+```bash
+git checkout adapter-only
+git remote add gitlab <URL_ИЗ_GITLAB>   # один раз; если remote имя занято — выберите другое
+git push -u gitlab adapter-only
+```
+
+3. Если GitLab — **первый** основной remote (репозиторий клонировали с GitHub и хотите только GitLab):
+
+```bash
+git remote rename origin github      # опционально, чтобы сохранить ссылку на GitHub
+git remote add origin <URL_GITLAB>
+git push -u origin adapter-only
+```
+
+4. Дальше в GitLab: **Merge request** из `adapter-only` в `main` (или в вашу ветку по процессу), настройте CI при необходимости.
+
+**SSH:** на машине должен быть добавлен SSH-ключ в GitLab (**User Settings → SSH Keys**).  
+**HTTPS:** при `git push` GitLab запросит логин и **Personal Access Token** (пароль от Git обычно не подходит).
 

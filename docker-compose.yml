@@ -11,3 +11,4 @@ services:
     volumes:
       - ./routes.yaml:/config/routes.yaml:ro
     restart: unless-stopped
+
